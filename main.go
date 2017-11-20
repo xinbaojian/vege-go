@@ -1,11 +1,14 @@
 package main
 
 import (
-	_ "vege-go/routers"
+	"encoding/json"
+	"fmt"
 	"github.com/astaxie/beego"
+	"vege-go/models"
+	_ "vege-go/routers"
 )
 
 func main() {
+	fmt.Println(models.ParseJson())
 	beego.Run()
 }
-
