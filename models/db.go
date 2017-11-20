@@ -41,7 +41,7 @@ func init() {
 	fmt.Println("init database.....")
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 
-	orm.RegisterDataBase("default", "mysql", "root:root@39.106.47.1:3306/crm_test?charset=utf8")
+	orm.RegisterDataBase("default", "mysql", "root:root@tcp(39.106.47.1:3306)/crm_test?charset=utf8")
 	// 需要在init中注册定义的model
 	orm.RegisterModel(new(VegeProduct))
 }
