@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
 	"vege-go/models"
@@ -9,6 +8,8 @@ import (
 )
 
 func main() {
-	fmt.Println(models.ParseJson())
+	fmt.Println("解析商品数据")
+	models.ParseJson()
+	models.GetCategoryByNameAndCompanyId("海鲜", 2)
 	beego.Run()
 }
