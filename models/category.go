@@ -1,7 +1,7 @@
 package models
 
 import (
-	"fmt"
+	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 	"time"
 )
@@ -30,8 +30,29 @@ func GetCategoryByNameAndCompanyId(categoryName string, sysCompanyId int) (categ
 	qs := o.QueryTable(category)
 	err := qs.Filter("CategoryName", categoryName).Filter("SysCompanyId", sysCompanyId).One(&category)
 	if err != nil {
-		fmt.Println("get Category error", err)
+		logs.Error("get Category error", err)
 	}
-	fmt.Println(category)
 	return category
+}
+
+func SaveOrUpdateCategory(category *VegeCategory) (id int, err error) {
+	o := orm.NewOrm()
+	newCategory, err := GetByNameAndCompanyId(category.CategoryName, category.SysCompanyId)
+	if err != nil {
+		category.CreateDate = time.Now()
+		// fmt.Println("insert:", category)
+		id, err := o.Insert(category)
+		return int(id), err
+	}
+	newCategory.ModifyDate = time.Now()
+	_, err = o.Update(&newCategory)
+	return newCategory.Id, err
+
+}
+
+func GetByNameAndCompanyId(categoryName string, sysCompanyId int) (category VegeCategory, err error) {
+	o := orm.NewOrm()
+	category = VegeCategory{CategoryName: categoryName, SysCompanyId: sysCompanyId}
+	err = o.Read(&category, "CategoryName", "SysCompanyId")
+	return category, err
 }
