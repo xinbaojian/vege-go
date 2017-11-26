@@ -3,13 +3,10 @@ package main
 import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
+	"strconv"
 	"time"
 	"vege-go/models"
 	_ "vege-go/routers"
-)
-
-var (
-	sysCompanyId = 2
 )
 
 func main() {
@@ -32,6 +29,19 @@ func Timer() {
 
 func SyscData() {
 	logs.Info("开始同步数据.............")
+
+	sysCompanyIdStr := beego.AppConfig.String("sys_company_id")
+	sysCompanyId, err := strconv.Atoi(sysCompanyIdStr)
+	if err != nil {
+		logs.Error("菜场标识不能为空")
+		panic("菜场标识不能为空")
+	}
+	defer func() {
+		if err := recover(); err != nil {
+			models.UpdateStatus(sysCompanyId, 1)
+		}
+	}()
+	models.UpdateStatus(sysCompanyId, 0)
 	pojos := models.ParseJson()
 	for _, pojo := range pojos {
 		//categroy
@@ -45,6 +55,7 @@ func SyscData() {
 			product := models.ConvertType(pojo)
 			product.SysCompanyId = sysCompanyId
 			product.CategoryId = id
+			product.Status = 1
 			models.SaveOrUpdateProduct(&product)
 			logs.Info("保存或更新菜品数据", product)
 		} else {

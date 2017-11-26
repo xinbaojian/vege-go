@@ -71,6 +71,7 @@ type VegeProduct struct {
 	MobileDesc     string
 	PcDesc         string
 	SysCompanyId   int
+	Status         int
 }
 
 func GetVegeProductList() {
@@ -170,4 +171,14 @@ func ConvertType(pojo VegeProductPojo) (product VegeProduct) {
 	// product.PromoTimeTo = pojo.PromoTimeTo
 	product.TraceCode = pojo.TraceCode
 	return product
+}
+
+func UpdateStatus(sysCompanyId int, status int) {
+	o := orm.NewOrm()
+	res, err := o.Raw("UPDATE vege_product SET status = ? WHERE sys_company_id  = ?", status, sysCompanyId).Exec()
+	if err == nil {
+		num, _ := res.RowsAffected()
+		logs.Info("update product status succefully;mysql row affected nums: ", num)
+	}
+
 }
