@@ -160,7 +160,7 @@ func ConvertType(pojo VegeProductPojo) (product VegeProduct) {
 	product.ShopName = pojo.ShopName
 	product.SellerId = pojo.SellerId
 	var sellName = beego.AppConfig.String("seller_name")
-	if sellName != nil && sellName != "" {
+	if sellName != "" {
 		product.SellerName = sellName
 	} else {
 		product.SellerName = pojo.ShopName
